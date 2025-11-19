@@ -6,6 +6,8 @@
     <title>Login</title>
 </head>
 <body>
-    
+    <form action="{{ route('login') }}" method="get">
+        <button type="submit">Ir al login</button>
+    </form>
 </body>
 </html>

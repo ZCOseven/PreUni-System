@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -26,7 +26,22 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->route('admin.dashboard');
+            $user = Auth::user();
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            if ($user->role === 'docente') {
+                return redirect()->route('docente.dashboard');
+            }
+
+            if ($user->role === 'alumno') {
+                return redirect()->route('alumno.dashboard');
+            }
+
+            Auth::logout();
+            return back()->with('error', 'Rol no autorizado');
         }
 
         return back()->withErrors([
@@ -43,5 +58,4 @@ class LoginController extends Controller
 
         return redirect()->route('login');
     }
-
 }
