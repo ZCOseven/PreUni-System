@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Alumno extends Model
+class Docente extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'alumnos';
+    protected $table = 'docentes';
 
     protected $fillable = [
         'codigo',
@@ -23,25 +23,27 @@ class Alumno extends Model
         'email',
         'telefono',
         'direccion',
+        'especialidad',
         'estado',
     ];
 
-    // Código único ALUYYYY-XXXXX
+    // Código único DOCYYYY-XXXXX
     protected static function booted()
     {
-        static::creating(function ($alumno) {
+        static::creating(function ($docente) {
             $year = date('Y'); // año actual
             do {
                 $randomNumbers = mt_rand(10000, 99999);
-                $codigo = "ALU{$year}-{$randomNumbers}";
+                $codigo = "DOC{$year}-{$randomNumbers}";
             } while (self::where('codigo', $codigo)->exists());
 
-            $alumno->codigo = $codigo;
+            $docente->codigo = $codigo;
         });
     }
 
-    public function nombreCompleto()
+    public function asignaturas()
     {
-        return $this->nombre . ' ' . $this->apellido_paterno . ' ' . $this->apellido_materno;
+        return $this->hasMany(Asignatura::class, 'docente_id', 'id')
+            ->whereNull('deleted_at');
     }
 }

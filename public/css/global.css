@@ -6,3 +6,11 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
+
+.text-center{
+    text-align: center !important;
+}
+
+.filtro{
+    display: none;
+}

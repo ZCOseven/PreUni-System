@@ -89,9 +89,9 @@ class AlumnoSeeder extends Seeder
         ];
 
         foreach ($alumnos as $alumno) {
-            $codigo = 'ALU'.date('Y').'-'.str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
+            $codigo = 'ALU' . date('Y') . '-' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
 
-            Alumno::firstOrCreate(
+            Alumno::updateOrCreate(
                 ['dni' => $alumno['dni']],
                 array_merge($alumno, ['codigo' => $codigo])
             );
