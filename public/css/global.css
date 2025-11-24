@@ -420,6 +420,88 @@
     padding: 20px;
 }
 
+.module__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.module__search-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.module__icon-search {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #1a5d94;
+    pointer-events: none;
+}
+
+.module__search::placeholder {
+    color: #1a5d94;
+}
+
+.module__search {
+    outline: none;
+    width: 340px;
+    padding-left: 49px;
+    height: 40px;
+    color: #1a5d94;
+    border-radius: 10px;
+    border: 1px solid #1a5d94;
+    font-size: 13px;
+}
+
+.module__btn-add {
+    width: fit-content;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid #1a5d94;
+    font-weight: 500;
+    background-color: #1a5d94;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast-custom-pos {
+    bottom: 30px !important;
+    right: 30px !important;
+}
+
+.tabla__row--cursos{
+    grid-template-columns: 2fr 4fr 1fr 3fr;
+}
+
+.tabla__row--asignatura{
+    grid-template-columns: 2.5fr 4fr 2fr 3fr 1fr 1fr 2fr;
+}
+
+.tabla__row--matriculas{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr 2fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.tabla__row--matriculas .tabla__cell {
+    min-width: 0;
+}
+
+.tabla__cell--truncate {
+    display: block;      
+    white-space: nowrap; 
+    overflow: hidden;    
+    text-overflow: ellipsis;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;

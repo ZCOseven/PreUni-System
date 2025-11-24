@@ -78,7 +78,7 @@
                     </button>
                 </form>
 
-                <button class="btn js-cursos" data-id="{{ $docente->id }}">Cursos asignados</button>
+                <button class="btn--info js-cursos" data-id="{{ $docente->id }}"><span class="option-icon material-symbols-outlined">book_2</span></button>
             </div>
         </div>
 

@@ -1,36 +1,40 @@
-<div class="matricula__detalle">
+<div class="detail-list">
 
-    <!-- Alumno -->
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Alumno:</span>
-        <span>{{ $matricula->alumno->nombreCompleto() ?? ($matricula->alumno->nombre.' '.$matricula->alumno->apellido_paterno) }}</span>
+    <div class="detail-row">
+        <h1 class="detail-h1">Información de Matrícula:</h1>
     </div>
 
-    <!-- Periodo -->
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Periodo:</span>
-        <span>{{ $matricula->periodo ?? '—' }}</span>
+    <div class="detail-row">
+        <span class="detail-label">Alumno:</span>
+        <span class="detail-value">
+            {{ $matricula->alumno->nombreCompleto() ?? ($matricula->alumno->nombre.' '.$matricula->alumno->apellido_paterno) }}
+        </span>
     </div>
 
-    <!-- Fecha de matrícula -->
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Fecha de matrícula:</span>
-        <span>{{ $matricula->fecha_matricula ? \Carbon\Carbon::parse($matricula->fecha_matricula)->format('d/m/Y') : '—' }}</span>
+    <div class="detail-row">
+        <span class="detail-label">Periodo:</span>
+        <span class="detail-value">{{ $matricula->periodo ?? '—' }}</span>
     </div>
 
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Observaciones:</span>
-        <span>{{ $matricula->observaciones ?? '—' }}</span>
+    <div class="detail-row">
+        <span class="detail-label">Fecha de matrícula:</span>
+        <span class="detail-value">
+            {{ $matricula->fecha_matricula ? \Carbon\Carbon::parse($matricula->fecha_matricula)->format('d/m/Y') : '—' }}
+        </span>
     </div>
 
-    <!-- Asignaturas inscritas -->
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Asignaturas inscritas:</span>
-        <span>
+    <div class="detail-row">
+        <span class="detail-label">Observaciones:</span>
+        <span class="detail-value">{{ $matricula->observaciones ?? '—' }}</span>
+    </div>
+
+    <div class="detail-row">
+        <span class="detail-label">Asignaturas inscritas:</span>
+        <span class="detail-value">
             @if($matricula->asignaturas && count($matricula->asignaturas) > 0)
                 @foreach($matricula->asignaturas as $asignatura)
-                    {{ $asignatura->curso->nombre ?? 'Curso deshabilitado' }} - 
-                    {{ $asignatura->docente->nombre ?? '' }} {{ $asignatura->docente->apellido_paterno ?? '' }}
+                    {{ $asignatura->curso->nombre ?? 'Curso deshabilitado' }} 
+                    ({{ $asignatura->docente->nombre ?? '' }} {{ $asignatura->docente->apellido_paterno ?? '' }})
                     @if(!$loop->last), @endif
                 @endforeach
             @else
@@ -39,24 +43,24 @@
         </span>
     </div>
 
-    <!-- Estado -->
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Estado:</span>
-        <span class="matricula__tag 
-            {{ $matricula->estado == 'activo' ? 'matricula__tag--success' : 'matricula__tag--danger' }}">
-            {{ ucfirst($matricula->estado) ?? '—' }}
+    <div class="detail-row">
+        <span class="detail-label">Creado:</span>
+        <span class="detail-value">
+            {{ $matricula->created_at ? $matricula->created_at->format('d/m/Y H:i') : '—' }}
         </span>
     </div>
 
-    <!-- Creación y actualización -->
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Creado:</span>
-        <span>{{ $matricula->created_at ? $matricula->created_at->format('d/m/Y H:i') : '—' }}</span>
+    <div class="detail-row">
+        <span class="detail-label">Última actualización:</span>
+        <span class="detail-value">
+            {{ $matricula->updated_at ? $matricula->updated_at->format('d/m/Y H:i') : '—' }}
+        </span>
     </div>
 
-    <div class="matricula__detail-row">
-        <span class="matricula__detail-label">Última actualización:</span>
-        <span>{{ $matricula->updated_at ? $matricula->updated_at->format('d/m/Y H:i') : '—' }}</span>
+    <div class="detail-row">
+        <span class="detail-label">Estado:</span>
+        <span class="tag {{ $matricula->estado == 'activo' ? 'tag--success' : 'tag--danger' }}">
+            {{ ucfirst($matricula->estado) ?? '—' }}
+        </span>
     </div>
-
 </div>
