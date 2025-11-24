@@ -1,61 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Alumnos')
+@section('title', 'Módulo Alumnos')
 
 @section('content')
 
 <style>
-    /* ================================
-   ESTILOS BEM PARA LA VISTA ALUMNOS
-   ================================ */
-
-    /* CONTENEDOR GENERAL */
-    .alumnos {
-        padding: 20px;
-        font-family: Arial, sans-serif;
-    }
-
-    /* HEADER */
-    .alumnos__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .alumnos__title {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    /* BOTÓN PRINCIPAL */
-    .btn {
-        padding: 8px 14px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    .btn--primary {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .btn--info {
-        background-color: #17a2b8;
-        color: white;
-    }
-
-    .btn--warning {
-        background-color: #ffc107;
-        color: black;
-    }
-
-    .btn--danger {
-        background-color: #dc3545;
-        color: white;
-    }
-
     /* TABLA */
     .alumnos__table {
         width: 100%;
@@ -97,66 +45,7 @@
         color: white;
     }
 
-    /* MODAL */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal--active {
-        display: flex;
-    }
-
-    .modal__content {
-        width: 600px;
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        animation: fadeIn .3s ease;
-    }
-
-    .modal__header {
-        background: #222;
-        color: white;
-        padding: 12px 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .modal__title {
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .modal__close {
-        color: white;
-        cursor: pointer;
-        font-size: 22px;
-    }
-
-    .modal__body {
-        padding: 20px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
+    
 
     /* ========== BLOQUE ALUMNO (BEM) ========== */
 
@@ -227,6 +116,332 @@
     .alumno__tag--danger {
         background-color: #dc3545;
     }
+</style>
+
+
+<style>
+    .module__toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .module__search-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .module__icon-search {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #1A5D94;
+        pointer-events: none;
+    }
+
+    .module__search::placeholder {
+        color: #1A5D94;
+    }
+
+    .module__search {
+        outline: none;
+        width: 340px;
+        padding-left: 49px;
+        height: 40px;
+        color: #1A5D94;
+        border-radius: 10px;
+        border: 1px solid #1A5D94;
+        font-size: 13px;
+    }
+
+    .module__btn-add {
+        width: fit-content;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid #1A5D94;
+        font-weight: 500;
+        background-color: #1A5D94;
+        color: #FFF;
+        cursor: pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* TOOLBAR */
+    .module__toolbar {
+        padding: 10px 0;
+        flex-shrink: 0;
+    }
+
+    .tabla {
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        gap: 10px;
+        min-height: 0;
+    }
+
+    .tabla__header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        flex-shrink: 0;
+        background: #e0e6ec;
+    }
+
+    .tabla__header>.tabla__row {
+        color: #414344;
+    }
+
+    .tabla__row--header {
+        display: grid;
+        grid-template-columns: 2fr 1fr 2fr 1fr 1fr 1.5fr;
+        background: #e0e6ec !important;
+        font-weight: bold;
+    }
+
+    .tabla__body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+        min-height: 0;
+
+    }
+
+    .tabla__body::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .tabla__body {
+        scrollbar-width: none;
+
+    }
+
+    .tabla__row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 2fr 1fr 1fr 1.5fr;
+        background: #f7f7f7;
+        color: #222324;
+        padding: 14px 30px;
+        border-radius: 10px;
+        align-items: center;
+    }
+
+    .tabla__cell {
+        /* padding: 4px 8px; */
+        font-size: 14px;
+    }
+
+    .tabla__cell--center {
+        text-align: center;
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+    }
+
+
+    .tabla__cell--empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+    }
+
+    .registro>.tabla__cell {
+        font-weight: 300;
+    }
+
+    .estado__activo {
+        color: #16A34A;
+        border-radius: 10px;
+        background-color: #8AD1A4;
+        font-weight: 500;
+        padding: 10px;
+    }
+
+    .estado__inactivo {
+        color: #DF3C3C;
+        border-radius: 10px;
+        background-color: #EF9D9D;
+        font-weight: 500;
+        padding: 10px;
+    }
+
+    .option-icon {
+        pointer-events: none;
+    }
+
+    .btn--info {
+        background-color: #8CADC9;
+        color: #1A5D94;
+        display: flex;
+        align-items: center;
+        padding: 7px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn--warning {
+        background-color: #FFD67F;
+        color: #FFAF00;
+        display: flex;
+        align-items: center;
+        padding: 7px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn--danger {
+        background-color: #D97F92;
+        color: #B50027;
+        display: flex;
+        align-items: center;
+        padding: 7px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .tabla__options {
+        display: flex;
+        gap: 10px;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        font-family: Arial, sans-serif;
+    }
+
+    .form__row {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .form__group {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .form__label {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form__input {
+        padding: 8px 10px;
+        border: 1px solid #d1d1d1;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .form__button {
+        padding: 10px 15px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .form__button--primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .form__button--secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    /* Opcional: hover para inputs y botones */
+    .form__input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .form__button:hover {
+        opacity: 0.9;
+    }
+
+    .c-email-concatenado {
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        width: 100%;
+    }
+
+    .c-email-concatenado input {
+        flex: 4;
+    }
+
+    .c-email-concatenado select {
+        flex: 3;
+    }
+
+    .filtro {
+        display: none;
+    }
+
+    .detail-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed #ddd;
+        padding-bottom: 6px;
+    }
+
+    .detail-label {
+        font-weight: bold;
+        color: #444;
+    }
+
+    .detail-value {
+        color: #333;
+        max-width: 400px;
+    }
+
+    .tag {
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: white;
+        font-size: 0.8rem;
+    }
+
+    .tag--success {
+        background-color: #28a745;
+    }
+
+    .tag--danger {
+        background-color: #dc3545;
+    }
+
+    .detail-h1{
+        font-family: 'Inter', sans-serif;
+        color: #1A5D94;
+        font-size: 20px;
+        font-weight: 900;
+    }
 
     .modal {
         display: none;
@@ -276,97 +491,95 @@
 
 
 
-<div class="alumnos">
+<div class="module__toolbar">
 
-    <!-- HEADER -->
-    <div class="alumnos__header">
-        <h2 class="alumnos__title">Gestión de Alumnos</h2>
-
-        <a style="text-decoration: none;" class="btn btn--info" href="{{ route('admin.dashboard') }}">Volver</a>
-
-        <button class="btn btn--primary" id="btnAgregarAlumno">
-            Agregar Alumno
-        </button>
+    <div class="module__search-wrapper">
+        <span class="module__icon-search material-symbols-outlined">search</span>
+        <input type="text" class="module__search" name="search" id="search" placeholder="Buscar Alumno . . .">
     </div>
 
-    <!-- INPUT DE BÚSQUEDA -->
-    <input type="text" class="alumnos__search" name="buscador" id="buscador" placeholder="Buscar Alumno . . . .">
+    <button class="module__btn-add" id="btnAgregarAlumno">
+        <span class="material-symbols-outlined module__btn-icon">
+            person_add
+        </span>
+        Añadir Alumno
+    </button>
+</div>
 
-    <!-- TABLA -->
-    <table class="alumnos__table">
-        <thead>
-            <tr>
-                <th>Nombre completo</th>
-                <th>DNI</th>
-                <th>Correo</th>
-                <th>Estado</th>
-                <th>Teléfono</th>
-                <th class="text-center">Opciones</th>
-            </tr>
-        </thead>
+<div class="tabla">
 
-        <tbody>
-            @forelse ($alumnos as $alumno)
-            <tr class="registro">
-                <td>
-                    {{ $alumno->nombre }}
-                    {{ $alumno->apellido_paterno }}
-                    {{ $alumno->apellido_materno }}
-                </td>
+    {{-- HEADER --}}
+    <div class="tabla__header">
+        <div class="tabla__row tabla__row--header">
+            <div class="tabla__cell">Nombre completo</div>
+            <div class="tabla__cell">DNI</div>
+            <div class="tabla__cell">Correo</div>
+            <div class="tabla__cell">Estado</div>
+            <div class="tabla__cell">Teléfono</div>
+            <div class="tabla__cell tabla__cell--center">Opciones</div>
+        </div>
+    </div>
 
-                <td>{{ $alumno->dni }}</td>
-                <td>{{ $alumno->email ?? '---' }}</td>
-                
-                <td>
-                    @if($alumno->estado === 'activo')
-                    <span class="badge badge--success">Activo</span>
-                    @else
-                    <span class="badge badge--secondary">Inactivo</span>
-                    @endif
-                </td>
-                
-                <td>{{ $alumno->telefono ?? '---' }}</td>
-                
-                <td style="text-align:center">
+    {{-- BODY --}}
+    <div class="tabla__body">
+        @forelse($alumnos as $alumno)
 
-                    <button class="btn btn--info js-ver" data-id="{{ $alumno->id }}">
-                        Ver
-                    </button>
+        <div class="tabla__row registro">
+            <div class="tabla__cell">
+                {{ $alumno->nombre }} {{ $alumno->apellido_paterno }} {{ $alumno->apellido_materno }}
+            </div>
 
-                    <button class="btn btn--warning js-editar" data-id="{{ $alumno->id }}">
-                        Editar
-                    </button>
+            <div class="tabla__cell">{{ $alumno->dni }}</div>
 
-                    <form action="{{ route('alumnos.destroy', $alumno->id) }}"
-                        method="POST"
-                        style="display:inline-block"
-                        onsubmit="return confirm('¿Seguro que deseas eliminar este alumno?')">
+            <div class="tabla__cell">{{ $alumno->email ?? '---' }}</div>
 
-                        @csrf
-                        @method('DELETE')
+            <div class="tabla__cell">
+                @if($alumno->estado === 'activo')
+                <span class="estado__activo">Activo</span>
+                @else
+                <span class="estado__inactivo">Inactivo</span>
+                @endif
+            </div>
 
-                        <button class="btn btn--danger">Eliminar</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6" style="padding:20px; text-align: center;">
-                    No hay alumnos registrados.
-                </td>
-            </tr>
-            @endforelse
+            <div class="tabla__cell">{{ $alumno->telefono ?? '---' }}</div>
 
-            <!-- FILA PARA CUANDO NO HAY RESULTADOS EN LA BÚSQUEDA -->
-            <tr id="no-result" style="display:none;">
-                <td colspan="6" style="padding:20px; text-align: center;">
-                    No se encontraron resultados para la búsqueda.
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            <div class="tabla__cell tabla__cell--center tabla__options">
+                <button class="btn--info js-ver" data-id="{{ $alumno->id }}"><span class="option-icon material-symbols-outlined">info</span></button>
+
+                <button class="btn--warning js-editar" data-id="{{ $alumno->id }}"><span class="option-icon material-symbols-outlined">edit</span></button>
+
+                <form action="{{ route('alumnos.destroy', $alumno->id) }}"
+                    method="POST"
+                    class="tabla__delete-form"
+                    onsubmit="event.stopPropagation(); return confirm('¿Seguro?')">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn--danger"><span class="option-icon material-symbols-outlined">delete</span></button>
+                </form>
+            </div>
+        </div>
+
+        @empty
+
+        <div class="tabla__row">
+            <div class="tabla__cell tabla__cell--empty">
+                No hay alumnos registrados.
+            </div>
+        </div>
+
+        @endforelse
+
+        {{-- NO RESULTADOS (se muestra/oculta vía JS) --}}
+        <div class="tabla__row" id="no-result" style="display:none;">
+            <div class="tabla__cell tabla__cell--empty">
+                No se encontraron resultados para la búsqueda.
+            </div>
+        </div>
+    </div>
 
 </div>
+
+
 
 
 <!-- MODAL (VACÍO — se llena con JS) -->

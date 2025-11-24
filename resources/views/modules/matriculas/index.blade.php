@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Matrículas')
+@section('title', 'Módulo Matrículas')
 
 <style>
     /* ================================
@@ -376,7 +376,11 @@
         <tbody>
             @forelse ($matriculas as $matricula)
             <tr class="registro">
-                <td>{{ $matricula->alumno->nombreCompleto() ?? 'Alumno eliminado' }}</td>
+                @if($matricula->alumno)
+                {{ $matricula->alumno->nombreCompleto() }}
+                @else
+                Sin alumno
+                @endif
                 <td>{{ $matricula->periodo }}</td>
                 <td>
                     @if($matricula->estado === 'activo')
@@ -387,10 +391,10 @@
                 </td>
                 <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     @if($matricula->asignaturas && count($matricula->asignaturas) > 0)
-                        {{ implode(', ', $matricula->asignaturas->pluck('curso.nombre')->toArray()) }}
-                        @else
-                        ---
-                        @endif
+                    {{ implode(', ', $matricula->asignaturas->pluck('curso.nombre')->toArray()) }}
+                    @else
+                    ---
+                    @endif
                 </td>
 
 

@@ -11,9 +11,13 @@ class AlumnoController extends Controller
     // Mostrar la lista de alumnos (activos e inactivos, sin eliminados)
     public function index()
     {
-        $alumnos = Alumno::whereNull('deleted_at')->get();
+        $alumnos = Alumno::whereNull('deleted_at')
+            ->orderBy('created_at', 'desc') // los más recientes primero
+            ->get();
+
         return view('modules.alumnos.index', compact('alumnos'));
     }
+
 
     // Guardar o actualizar alumno (si llega id, actualiza; si no, crea)
     public function save(Request $request)
@@ -24,7 +28,12 @@ class AlumnoController extends Controller
             'apellido_materno' => 'required',
             'dni' => 'required|unique:alumnos,dni,' . $request->id,
             'fecha_nacimiento' => 'required|date',
+            'correo_usuario' => 'required',
+            'correo_dominio' => 'required',
         ]);
+
+        // Concatenar correo completo
+        $emailCompleto = $request->correo_usuario . '@' . $request->correo_dominio;
 
         if ($request->id) {
             // Actualizar
@@ -36,7 +45,7 @@ class AlumnoController extends Controller
                 'dni' => $request->dni,
                 'fecha_nacimiento' => $request->fecha_nacimiento,
                 'genero' => $request->genero ?? $alumno->genero,
-                'email' => $request->email,
+                'email' => $emailCompleto,
                 'telefono' => $request->telefono,
                 'direccion' => $request->direccion,
                 'estado' => $request->estado ?? $alumno->estado,
@@ -52,7 +61,7 @@ class AlumnoController extends Controller
                 'dni' => $request->dni,
                 'fecha_nacimiento' => $request->fecha_nacimiento,
                 'genero' => $request->genero ?? 'masculino',
-                'email' => $request->email,
+                'email' => $emailCompleto,
                 'telefono' => $request->telefono,
                 'direccion' => $request->direccion,
                 'estado' => $request->estado ?? 'activo',

@@ -1,65 +1,103 @@
-<form action="{{ route('alumnos.save') }}" method="POST" class="alumno__form">
+<form action="{{ route('alumnos.save') }}" method="POST" class="form">
     @csrf
     <input type="hidden" name="id" value="{{ $alumno->id }}">
 
-    <div class="alumno__group">
-        <label class="alumno__label">Nombre</label>
-        <input type="text" name="nombre" class="alumno__input" value="{{ $alumno->nombre }}" required>
+    <!-- FILA 1: Nombre -->
+    <div class="form__row">
+        <div class="form__group">
+            <label class="form__label">Nombre</label>
+            <input type="text" name="nombre" class="form__input" value="{{ $alumno->nombre }}" required>
+        </div>
     </div>
 
-    <div class="alumno__group">
-        <label class="alumno__label">Apellido Paterno</label>
-        <input type="text" name="apellido_paterno" class="alumno__input" value="{{ $alumno->apellido_paterno }}" required>
+    <!-- FILA 2: Apellido Paterno y Apellido Materno -->
+    <div class="form__row">
+        <div class="form__group">
+            <label class="form__label">Apellido Paterno</label>
+            <input type="text" name="apellido_paterno" class="form__input" value="{{ $alumno->apellido_paterno }}" required>
+        </div>
+        <div class="form__group">
+            <label class="form__label">Apellido Materno</label>
+            <input type="text" name="apellido_materno" class="form__input" value="{{ $alumno->apellido_materno }}" required>
+        </div>
     </div>
 
-    <div class="alumno__group">
-        <label class="alumno__label">Apellido Materno</label>
-        <input type="text" name="apellido_materno" class="alumno__input" value="{{ $alumno->apellido_materno }}" required>
+    <!-- FILA 3: DNI -->
+    <div class="form__row">
+        <div class="form__group">
+            <label class="form__label">DNI</label>
+            <input type="text" name="dni" class="form__input" value="{{ $alumno->dni }}" required>
+        </div>
     </div>
 
-    <div class="alumno__group">
-        <label class="alumno__label">DNI</label>
-        <input type="text" name="dni" class="alumno__input" value="{{ $alumno->dni }}" required>
+    <!-- FILA 4: Fecha de nacimiento y Género -->
+    <div class="form__row">
+        <div class="form__group">
+            <label class="form__label">Fecha de nacimiento</label>
+            <input type="date" name="fecha_nacimiento" class="form__input" value="{{ $alumno->fecha_nacimiento }}" required>
+        </div>
+        <div class="form__group">
+            <label class="form__label">Género</label>
+            <select name="genero" class="form__input">
+                <option value="masculino" {{ $alumno->genero == 'masculino' ? 'selected' : '' }}>Masculino</option>
+                <option value="femenino" {{ $alumno->genero == 'femenino' ? 'selected' : '' }}>Femenino</option>
+                <option value="otro" {{ $alumno->genero == 'otro' ? 'selected' : '' }}>Otro</option>
+            </select>
+        </div>
     </div>
 
-    <div class="alumno__group">
-        <label class="alumno__label">Fecha de nacimiento</label>
-        <input type="date" name="fecha_nacimiento" class="alumno__input" value="{{ $alumno->fecha_nacimiento }}" required>
+    @php
+    $correoUsuario = '';
+    $correoDominio = '';
+    if(!empty($alumno->email) && strpos($alumno->email, '@') !== false){
+        [$correoUsuario, $correoDominio] = explode('@', $alumno->email, 2);
+    }
+    $dominios = ['gmail.com','hotmail.com','yahoo.com','outlook.com'];
+    @endphp
+
+    <!-- FILA 5: Correo -->
+    <div class="form__row">
+        <div class="form__group">
+            <label class="form__label">Correo</label>
+            <div class="c-email-concatenado">
+                <input type="text" name="correo_usuario" class="form__input"
+                    value="{{ old('correo_usuario', $correoUsuario) }}" placeholder="Ejem. patricia.armendariz" required>
+                <select name="correo_dominio" class="form__input" required>
+                    @foreach($dominios as $dominio)
+                        <option value="{{ $dominio }}" {{ (old('correo_dominio', $correoDominio) == $dominio) ? 'selected' : '' }}>
+                            {{ '@'.$dominio }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
     </div>
 
-    <div class="alumno__group">
-        <label class="alumno__label">Género</label>
-        <select name="genero" class="alumno__input">
-            <option value="masculino" {{ $alumno->genero == 'masculino' ? 'selected' : '' }}>Masculino</option>
-            <option value="femenino" {{ $alumno->genero == 'femenino' ? 'selected' : '' }}>Femenino</option>
-            <option value="otro" {{ $alumno->genero == 'otro' ? 'selected' : '' }}>Otro</option>
-        </select>
+
+    <div class="form__row">
+        <div class="form__group">
+            <label class="form__label">Teléfono</label>
+            <input type="text" name="telefono" class="form__input" value="{{ $alumno->telefono }}">
+        </div>
     </div>
 
-    <div class="alumno__group">
-        <label class="alumno__label">Correo</label>
-        <input type="email" name="email" class="alumno__input" value="{{ $alumno->email }}">
+    <!-- FILA 6: Dirección y Estado -->
+    <div class="form__row">
+        <div class="form__group">
+            <label class="form__label">Dirección</label>
+            <input type="text" name="direccion" class="form__input" value="{{ $alumno->direccion }}">
+        </div>
+        <div class="form__group">
+            <label class="form__label">Estado</label>
+            <select name="estado" class="form__input">
+                <option value="activo" {{ $alumno->estado == 'activo' ? 'selected' : '' }}>Activo</option>
+                <option value="inactivo" {{ $alumno->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+            </select>
+        </div>
     </div>
 
-    <div class="alumno__group">
-        <label class="alumno__label">Teléfono</label>
-        <input type="text" name="telefono" class="alumno__input" value="{{ $alumno->telefono }}">
-    </div>
-
-    <div class="alumno__group">
-        <label class="alumno__label">Dirección</label>
-        <input type="text" name="direccion" class="alumno__input" value="{{ $alumno->direccion }}">
-    </div>
-
-    <div class="alumno__group">
-        <label class="alumno__label">Estado</label>
-        <select name="estado" class="alumno__input">
-            <option value="activo" {{ $alumno->estado == 'activo' ? 'selected' : '' }}>Activo</option>
-            <option value="inactivo" {{ $alumno->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
-        </select>
-    </div>
-
-    <button class="alumno__button alumno__button--primary" type="submit">
+    <!-- Botón Actualizar -->
+    <button type="submit" class="form__button form__button--primary">
         Actualizar
     </button>
 </form>

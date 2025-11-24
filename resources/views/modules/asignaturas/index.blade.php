@@ -1,441 +1,139 @@
 @extends('layouts.app')
-@section('title', 'Asignaturas')
+@section('title', 'Módulo Asignaturas')
 
-<style>
-    /* ================================
-   ESTILOS BEM PARA LA VISTA ASIGNATURAS
-   ================================ */
-
-    /* CONTENEDOR GENERAL */
-    .asignaturas {
-        padding: 20px;
-        font-family: Arial, sans-serif;
-    }
-
-    /* HEADER */
-    .asignaturas__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .asignaturas__title {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    /* BOTÓN PRINCIPAL */
-    .btn {
-        padding: 8px 14px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    .btn--primary {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .btn--info {
-        background-color: #17a2b8;
-        color: white;
-    }
-
-    .btn--warning {
-        background-color: #ffc107;
-        color: black;
-    }
-
-    .btn--danger {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    /* TABLA */
-    .asignaturas__table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-
-    .asignaturas__table th {
-        background: #222;
-        color: white;
-        padding: 10px;
-        text-align: left;
-    }
-
-    .asignaturas__table td {
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
-    }
-
-    .asignaturas__table tr:hover {
-        background: #f5f5f5;
-    }
-
-    /* BADGES */
-    .badge {
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .badge--success {
-        background: #28a745;
-        color: white;
-    }
-
-    .badge--secondary {
-        background: #6c757d;
-        color: white;
-    }
-
-    /* MODAL */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal--active {
-        display: flex;
-    }
-
-    .modal__content {
-        width: 600px;
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        animation: fadeIn .3s ease;
-    }
-
-    .modal__header {
-        background: #222;
-        color: white;
-        padding: 12px 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .modal__title {
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .modal__close {
-        color: white;
-        cursor: pointer;
-        font-size: 22px;
-    }
-
-    .modal__body {
-        padding: 20px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    /* ========== BLOQUE ALUMNO (BEM) ========== */
-
-    .asignatura__form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .asignatura__group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .asignatura__label {
-        font-size: 0.9rem;
-        margin-bottom: 4px;
-        font-weight: 600;
-    }
-
-    .asignatura__input {
-        padding: 8px 10px;
-        border: 1px solid #d1d1d1;
-        border-radius: 4px;
-    }
-
-    .asignatura__button {
-        padding: 10px 15px;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    .asignatura__button--primary {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .asignatura__detalle {
-        display: flex;
-        flex-direction: column;
-        gap: 0.7rem;
-    }
-
-    .asignatura__detail-row {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px dashed #ddd;
-        padding-bottom: 6px;
-    }
-
-    .asignatura__detail-label {
-        font-weight: bold;
-        color: #444;
-    }
-
-    .asignatura__tag {
-        padding: 4px 8px;
-        border-radius: 4px;
-        color: white;
-        font-size: 0.8rem;
-    }
-
-    .asignatura__tag--success {
-        background-color: #28a745;
-    }
-
-    .asignatura__tag--danger {
-        background-color: #dc3545;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, .6);
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-
-    .modal--visible {
-        display: flex !important;
-    }
-
-    /* ================================
-   LOADER PARA MODAL (BEM)
-   ================================ */
-
-    .modal-loader {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 25px 0;
-    }
-
-    .modal-loader__circle {
-        width: 40px;
-        height: 40px;
-        border: 3px solid transparent;
-        border-top: 3px solid #3498db;
-        border-right: 3px solid #3498db;
-        border-radius: 50%;
-        animation: modal-loader-spin 0.8s linear infinite;
-    }
-
-    @keyframes modal-loader-spin {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-
-    /* ===============================
-   FORMULARIOS BEM
-   =============================== */
-
-    .form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        font-family: Arial, sans-serif;
-    }
-
-    .form__row {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        /* Para adaptarse a pantallas pequeñas */
-    }
-
-    .form__group {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        /* Cada grupo ocupa el mismo ancho por fila */
-        min-width: 150px;
-        /* Ancho mínimo para inputs */
-    }
-
-    .form__label {
-        font-size: 0.9rem;
-        margin-bottom: 4px;
-        font-weight: 600;
-        color: #333;
-    }
-
-    .form__input {
-        padding: 8px 10px;
-        border: 1px solid #d1d1d1;
-        border-radius: 4px;
-        font-size: 0.9rem;
-    }
-
-    .form__button {
-        padding: 10px 15px;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 0.9rem;
-    }
-
-    .form__button--primary {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .form__button--secondary {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    /* Opcional: hover para inputs y botones */
-    .form__input:focus {
-        border-color: #007bff;
-        outline: none;
-    }
-
-    .form__button:hover {
-        opacity: 0.9;
-    }
-</style>
 
 @section('content')
 
-<div class="asignaturas">
+<!-- TOOLBAR -->
+<div class="module__toolbar">
 
-    <!-- HEADER -->
-    <div class="asignaturas__header">
-        <h2 class="asignaturas__title">Gestión de Asignaturas</h2>
-
-        <a style="text-decoration: none;" class="btn btn--info" href="{{ route('admin.dashboard') }}">Volver</a>
-
-        <button class="btn btn--primary" id="btnAgregarAsignatura">
-            Agregar Asignatura
-        </button>
+    <div class="module__search-wrapper">
+        <span class="module__icon-search material-symbols-outlined">search</span>
+        <input type="text" class="module__search" name="search" id="search" placeholder="Buscar Asignatura . . .">
     </div>
 
-    <!-- INPUT DE BÚSQUEDA -->
-    <input type="text" class="asignaturas__search" name="buscador" id="buscador" placeholder="Buscar Asignatura . . . .">
+    <button class="module__btn-add" id="btnAgregarAsignatura">
+        <span class="material-symbols-outlined module__btn-icon">
+            library_add
+        </span>
+        Añadir Asignatura
+    </button>
+</div>
 
-    <!-- TABLA -->
-    <table class="asignaturas__table">
-        <thead>
-            <tr>
-                <th>Curso</th>
-                <th>Docente</th>
-                <th>Periodo</th>
-                <th>Horario</th>
-                <th>Aula</th>
-                <th>Estado</th>
-                <th class="text-center">Opciones</th>
-            </tr>
-        </thead>
+<!-- TABLA GLOBAL -->
+<div class="tabla">
 
-        <tbody>
-            @forelse ($asignaturas as $asignatura)
-            <tr class="registro">
-                <td>{{ $asignatura->curso->nombre ?? 'Curso deshabilitado' }}</td>
-                <td>
-                    @if($asignatura->docente && $asignatura->docente->estado === 'activo')
-                    {{ $asignatura->docente->codigo ? $asignatura->docente->codigo.' - ' : '' }}
-                    {{ $asignatura->docente->nombre }} {{ $asignatura->docente->apellido_paterno }} {{ $asignatura->docente->apellido_materno }}
-                    @else
-                    Curso deshabilitado, comunicarse con el área de soporte
-                    <button class="btn btn--secondary btn-sm" disabled>Enviar mensaje</button>
-                    @endif
-                </td>
-                <td>{{ $asignatura->periodo }}</td>
-                <td>{{ $asignatura->horarioFormateado() ?? '---' }}</td>
-                <td>{{ $asignatura->aula }}</td>
-                <td>
-                    @if($asignatura->estado === 'activo')
-                    <span class="badge badge--success">Activo</span>
-                    @else
-                    <span class="badge badge--secondary">Inactivo</span>
-                    @endif
-                </td>
-                <td style="text-align:center">
+    {{-- HEADER --}}
+    <div class="tabla__header">
+        <div class="tabla__row tabla__row--asignatura tabla__row--header">
+            <div class="tabla__cell">Curso</div>
+            <div class="tabla__cell">Docente</div>
+            <div class="tabla__cell">Periodo</div>
+            <div class="tabla__cell">Horario</div>
+            <div class="tabla__cell">Aula</div>
+            <div class="tabla__cell">Estado</div>
+            <div class="tabla__cell tabla__cell--center">Opciones</div>
+        </div>
+    </div>
 
-                    <button class="btn btn--info js-ver" data-id="{{ $asignatura->id }}">
-                        Ver
+    {{-- BODY --}}
+    <div class="tabla__body">
+
+        @forelse($asignaturas as $asignatura)
+
+        <div class="tabla__row tabla__row--asignatura registro">
+
+            <!-- CURSO -->
+            <div class="tabla__cell">
+                {{ $asignatura->curso->nombre ?? 'Curso deshabilitado' }}
+            </div>
+
+            <!-- DOCENTE -->
+            <div class="tabla__cell">
+                @if($asignatura->docente && $asignatura->docente->estado === 'activo')
+
+                {{ $asignatura->docente->codigo ? $asignatura->docente->codigo . ' - ' : '' }}
+                {{ $asignatura->docente->nombre }}
+                {{ $asignatura->docente->apellido_paterno }}
+                {{ $asignatura->docente->apellido_materno }}
+
+                @else
+                <span class="texto__alerta">
+                    Docente deshabilitado – contactar soporte
+                </span>
+                @endif
+            </div>
+
+            <!-- PERIODO -->
+            <div class="tabla__cell">
+                {{ $asignatura->periodo }}
+            </div>
+
+            <!-- HORARIO -->
+            <div class="tabla__cell">
+                {{ $asignatura->horarioFormateado() ?? '---' }}
+            </div>
+
+            <!-- AULA -->
+            <div class="tabla__cell">
+                {{ $asignatura->aula }}
+            </div>
+
+            <!-- ESTADO -->
+            <div class="tabla__cell">
+                @if($asignatura->estado === 'activo')
+                <span class="estado__activo">Activo</span>
+                @else
+                <span class="estado__inactivo">Inactivo</span>
+                @endif
+            </div>
+
+            <!-- OPCIONES -->
+            <div class="tabla__cell tabla__cell--center tabla__options">
+
+                <button class="btn--info js-ver" data-id="{{ $asignatura->id }}">
+                    <span class="option-icon material-symbols-outlined">info</span>
+                </button>
+
+                <button class="btn--warning js-editar" data-id="{{ $asignatura->id }}">
+                    <span class="option-icon material-symbols-outlined">edit</span>
+                </button>
+
+                <form action="{{ route('asignaturas.destroy', $asignatura->id) }}"
+                    method="POST"
+                    class="tabla__delete-form"
+                    onsubmit="event.stopPropagation(); return confirm('¿Seguro?')">
+
+                    @csrf
+                    @method('DELETE')
+
+                    <button class="btn--danger">
+                        <span class="option-icon material-symbols-outlined">delete</span>
                     </button>
+                </form>
 
-                    <button class="btn btn--warning js-editar" data-id="{{ $asignatura->id }}">
-                        Editar
-                    </button>
+            </div>
 
-                    <form action="{{ route('asignaturas.destroy', $asignatura->id) }}"
-                        method="POST"
-                        style="display:inline-block"
-                        onsubmit="return confirm('¿Seguro que deseas eliminar esta asignatura?')">
+        </div>
 
-                        @csrf
-                        @method('DELETE')
+        @empty
 
-                        <button class="btn btn--danger">Eliminar</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="7" style="padding:20px; text-align: center;">
-                    No hay asignaturas registradas.
-                </td>
-            </tr>
-            @endforelse
+        <div class="tabla__row">
+            <div class="tabla__cell tabla__cell--empty">
+                No hay asignaturas registradas.
+            </div>
+        </div>
 
-            <!-- FILA PARA CUANDO NO HAY RESULTADOS EN LA BÚSQUEDA -->
-            <tr id="no-result" style="display:none;">
-                <td colspan="7" style="padding:20px; text-align: center;">
-                    No se encontraron resultados para la búsqueda.
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        @endforelse
 
+        {{-- NO RESULTADOS --}}
+        <div class="tabla__row" id="no-result" style="display:none;">
+            <div class="tabla__cell tabla__cell--empty">
+                No se encontraron resultados para la búsqueda.
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <!-- MODAL (VACÍO — se llena con JS) -->

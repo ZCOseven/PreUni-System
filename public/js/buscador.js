@@ -12,7 +12,7 @@
 // })
 
 document.addEventListener("keyup", e => {
-    if (e.target.matches("#buscador")) {
+    if (e.target.matches("#search")) {
 
         if (e.key === "Escape") e.target.value = ""
 

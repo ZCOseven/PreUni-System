@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("hola mundo");
 
     const modal = document.getElementById("alumno-modal");
     const modalBody = document.getElementById("alumno-modal-content");

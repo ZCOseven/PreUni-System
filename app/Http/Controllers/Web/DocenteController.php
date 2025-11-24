@@ -11,9 +11,13 @@ class DocenteController extends Controller
     // Mostrar la lista de docentes (activos e inactivos, sin eliminados)
     public function index()
     {
-        $docentes = Docente::whereNull('deleted_at')->get();
+        $docentes = Docente::whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('modules.docentes.index', compact('docentes'));
     }
+
 
     // Guardar o actualizar docente
     public function save(Request $request)

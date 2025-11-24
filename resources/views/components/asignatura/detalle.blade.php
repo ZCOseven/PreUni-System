@@ -1,63 +1,91 @@
-<div class="asignatura__detalle">
+<div class="detail-list">
 
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Curso:</span>
-        <span>{{ $asignatura->curso->nombre ?? '—' }}</span>
+    <!-- TÍTULO -->
+    <div class="detail-row">
+        <h1 class="detail-h1">Información de la Asignatura:</h1>
     </div>
 
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Docente:</span>
-        <span>
-            {{ $asignatura->docente->codigo ? $asignatura->docente->codigo . ' - ' : '' }}
-            {{ $asignatura->docente->nombre ?? '' }}
-            {{ $asignatura->docente->apellido_paterno ?? '' }}
-            {{ $asignatura->docente->apellido_materno ?? '' }}
-        </span>
+    <!-- CURSO -->
+    <div class="detail-row">
+        <span class="detail-label">Curso:</span>
+        <span class="detail-value">{{ $asignatura->curso->nombre ?? '—' }}</span>
     </div>
 
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Periodo:</span>
-        <span>{{ $asignatura->periodo ?? '—' }}</span>
-    </div>
-
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Horario:</span>
-        <span>
-            @if(is_array($asignatura->horario))
-                @if(isset($asignatura->horario['dias']))
-                    {{ implode(', ', array_map('ucfirst', $asignatura->horario['dias'])) }}
-                    | {{ $asignatura->horario['hora_inicio'] ?? '—' }} - {{ $asignatura->horario['hora_fin'] ?? '—' }}
-                @else
-                    @foreach($asignatura->horario as $h)
-                        {{ ucfirst($h['dia'] ?? '—') }} | {{ $h['inicio'] ?? '—' }} - {{ $h['fin'] ?? '—' }}@if(!$loop->last) / @endif
-                    @endforeach
-                @endif
+    <!-- DOCENTE -->
+    <div class="detail-row">
+        <span class="detail-label">Docente:</span>
+        <span class="detail-value">
+            @if($asignatura->docente)
+                {{ $asignatura->docente->codigo ? $asignatura->docente->codigo . ' - ' : '' }}
+                {{ $asignatura->docente->nombre }}
+                {{ $asignatura->docente->apellido_paterno }}
+                {{ $asignatura->docente->apellido_materno }}
             @else
                 —
             @endif
         </span>
     </div>
 
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Aula:</span>
-        <span>{{ $asignatura->aula ?? '—' }}</span>
+    <!-- PERIODO -->
+    <div class="detail-row">
+        <span class="detail-label">Periodo:</span>
+        <span class="detail-value">{{ $asignatura->periodo ?? '—' }}</span>
     </div>
 
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Fecha de registro:</span>
-        <span>{{ $asignatura->created_at ? $asignatura->created_at->format('d/m/Y H:i') : '—' }}</span>
+    <!-- HORARIO -->
+    <div class="detail-row">
+        <span class="detail-label">Horario:</span>
+        <span class="detail-value">
+            @if(is_array($asignatura->horario))
+
+                {{-- Formato NUEVO: ['dias' => [], 'hora_inicio' => '', 'hora_fin' => ''] --}}
+                @if(isset($asignatura->horario['dias']))
+                    {{ implode(', ', array_map('ucfirst', $asignatura->horario['dias'])) }}
+                    | {{ $asignatura->horario['hora_inicio'] ?? '—' }}
+                    - {{ $asignatura->horario['hora_fin'] ?? '—' }}
+
+                {{-- Formato ANTIGUO: array de objetos/días --}}
+                @else
+                    @foreach($asignatura->horario as $h)
+                        {{ ucfirst($h['dia'] ?? '—') }}
+                        | {{ $h['inicio'] ?? '—' }} - {{ $h['fin'] ?? '—' }}
+                        @if(!$loop->last) / @endif
+                    @endforeach
+                @endif
+
+            @else
+                —
+            @endif
+        </span>
     </div>
 
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Última actualización:</span>
-        <span>{{ $asignatura->updated_at ? $asignatura->updated_at->format('d/m/Y H:i') : '—' }}</span>
+    <!-- AULA -->
+    <div class="detail-row">
+        <span class="detail-label">Aula:</span>
+        <span class="detail-value">{{ $asignatura->aula ?? '—' }}</span>
     </div>
 
-    <div class="asignatura__detail-row">
-        <span class="asignatura__detail-label">Estado:</span>
-        <span class="asignatura__tag 
-            {{ $asignatura->estado == 'activo' ? 'asignatura__tag--success' : 'asignatura__tag--danger' }}">
-            {{ ucfirst($asignatura->estado) ?? '—' }}
+    <!-- FECHA REGISTRO -->
+    <div class="detail-row">
+        <span class="detail-label">Fecha de registro:</span>
+        <span class="detail-value">
+            {{ $asignatura->created_at ? $asignatura->created_at->format('d/m/Y H:i') : '—' }}
+        </span>
+    </div>
+
+    <!-- ÚLTIMA ACTUALIZACIÓN -->
+    <div class="detail-row">
+        <span class="detail-label">Última actualización:</span>
+        <span class="detail-value">
+            {{ $asignatura->updated_at ? $asignatura->updated_at->format('d/m/Y H:i') : '—' }}
+        </span>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="detail-row">
+        <span class="detail-label">Estado:</span>
+        <span class="tag {{ $asignatura->estado == 'activo' ? 'tag--success' : 'tag--danger' }}">
+            {{ ucfirst($asignatura->estado) }}
         </span>
     </div>
 
